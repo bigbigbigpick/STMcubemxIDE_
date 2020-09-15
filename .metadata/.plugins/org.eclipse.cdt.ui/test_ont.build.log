@@ -1,0 +1,7 @@
+10:13:38 **** Clean-only build of configuration Debug for project test_ont ****
+make -j4 clean 
+rm -rf *
+ 
+
+10:13:39 Build Finished. 0 errors, 0 warnings. (took 710ms)
+

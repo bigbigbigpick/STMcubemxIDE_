@@ -72,7 +72,6 @@ void MX_USART2_UART_Init(void)
   {
     Error_Handler();
   }
-  HAL_UART_Receive_IT(&huart2,(uint8_t *)&rxbuff2,1);		// 重新使能串口2接收中断
 
 }
 /* USART3 init function */
@@ -263,7 +262,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
    static uint8_t count=0,b[3]={0};
 
   /* Prevent unused argument(s) compilation warning */
-	if(huart->Instance == USART1)	// 判断是由哪个串口触发的中�??????????????????????
+	if(huart->Instance == USART1)	// 判断是由哪个串口触发的中�???????????????????????
 	{
 
 	}
@@ -282,7 +281,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 		else if(count == 3)
 		{
-			//取时间,
+			//取时�?,
 			scan_result_buffer[u2].scantime = HAL_GetTick();
 			scan_result_buffer[u2].file_buffer[0] = b[0];
 			scan_result_buffer[u2++].file_buffer[1] = b[1];

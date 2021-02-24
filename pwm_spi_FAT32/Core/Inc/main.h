@@ -66,6 +66,8 @@ void Error_Handler(void);
 #define sca100_MISO_GPIO_Port GPIOB
 #define sca100_MOSI_Pin GPIO_PIN_15
 #define sca100_MOSI_GPIO_Port GPIOB
+#define electric_relay_pin_Pin GPIO_PIN_8
+#define electric_relay_pin_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

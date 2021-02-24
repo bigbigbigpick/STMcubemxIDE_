@@ -103,7 +103,6 @@ void MX_TIM3_Init(void)
     Error_Handler();
   }
 
-
 }
 
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)

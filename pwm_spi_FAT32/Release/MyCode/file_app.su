@@ -1,3 +1,0 @@
-file_app.c:10:6:app_initfile	8	static
-file_app.c:51:6:app_FATFS_Run	16	static
-file_app.c:117:9:app_readfile	16	static

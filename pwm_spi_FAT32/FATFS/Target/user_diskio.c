@@ -16,9 +16,10 @@
   *
   ******************************************************************************
   */
+#include "../../Src/Device/SDCard/sd_card.h"
 #include "user_diskio.h"
 #include "main.h"
-#include "SDCard.h"
+
  /* USER CODE END Header */
 
 #ifdef USE_OBSOLETE_USER_CODE_SECTION_0
@@ -87,7 +88,7 @@ DSTATUS USER_initialize (
   /* USER CODE BEGIN INIT */
     Stat = STA_NOINIT;
 
-    /* 获取SD卡状�? */
+    /* 获取SD卡状�??? */
   	int result;
   	result = SD_Init();
 

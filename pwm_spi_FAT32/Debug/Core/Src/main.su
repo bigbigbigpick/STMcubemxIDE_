@@ -1,6 +1,6 @@
-main.c:78:5:main	24	static
-main.c:169:6:SystemClock_Config	72	static
-main.c:206:6:pwm_frequency	24	static
-main.c:227:6:HAL_UART_RxCpltCallback	24	static
-main.c:268:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:295:6:Error_Handler	4	static
+main.c:78:5:main	64	static
+main.c:176:6:SystemClock_Config	72	static
+main.c:213:6:pwm_frequency	24	static
+main.c:234:6:HAL_UART_RxCpltCallback	24	static
+main.c:276:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:303:6:Error_Handler	4	static

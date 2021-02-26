@@ -27,7 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
 #include "../../Src/Device/Measure/measure.h"
 #include "../../Src/Device/Open_Tel_Mavlink/open_tel_mavlink.h"
 
@@ -79,7 +78,8 @@ void measureStopHandler() {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+//	FIL  test;
+//	char * ctest="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -88,8 +88,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-	registerMeasureStartHandler(measureStartHandler);
-	registerMeasureStopHandler(measureStopHandler);
+//	registerMeasureStartHandler(measureStartHandler);
+//	registerMeasureStopHandler(measureStopHandler);
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -110,25 +110,68 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
 	//60°
 	// 200HZ
-	printf("test\r\n");
+//	printf("test\r\n");
+//  FS_Init();
+//  FS_Open(&test,"test1");
+//  FS_Write(&test,ctest,strlen(ctest));
+//  FS_Close(&test);
+	Measure_Device_Init();
+	Measure_Start();
 
+	mavlink_command_long_t com = { 0 };
+	mavlink_set_mode_t set_mode={0};
+	mavlink_command_long_t take_off_local={0};
+	mavlink_command_long_t take_off={0};
+	mavlink_command_long_t land={0};
+	mavlink_command_long_t ROI={0};
+	mavlink_set_position_target_local_ned_t set_position={0};
+	/*mavlink_control_system_state_t control={0};
+	control.airspeed=-1;
+	control.x_acc=1;
+	control.x_vel=2;
+	control.x_pos=3;
+	control.y_acc=1;
+	control.y_vel=2;
+	control.y_pos=3;
+	control.z_acc=1;
+	control.z_vel=2;
+	control.z_pos=3;*/
+
+	set_position.target_system=1;
+	set_position.target_component=0;
+	set_position.coordinate_frame=MAV_FRAME_LOCAL_NED;
+	set_position.type_mask=4039;
+	set_position.time_boot_ms=0;
+	set_position.afx=0;
+	set_position.vx=8;
+	set_position.x=0;
+	set_position.afy=0;
+	set_position.vy=8;
+	set_position.y=0;
+	set_position.afz=0;
+	set_position.vz=8;
+	set_position.z=0;
+
+	com.target_system    = 1;
+	com.target_component = 0;
+	com.command          = MAV_CMD_COMPONENT_ARM_DISARM;
+	com.confirmation     = true;
+	com.param1           = 1; // flag >0.5 => start, <0.5 => stop
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-
-//  app_FATFS_Run(file,"test4.c",strbuf);
-
 	while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+		mavlink_msg_command_long_send_struct(MAVLINK_COMM_0,&com);
+		HAL_Delay(500);
 		Measure_Update();
+		update();
 
 	}
   /* USER CODE END 3 */
@@ -184,7 +227,6 @@ void SystemClock_Config(void)
   * @param  htim : TIM handle
   * @retval None
   */
-
 
 /**
   * @brief  This function is executed in case of error occurrence.

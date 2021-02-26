@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
-  * @file    user_diskio.c
-  * @brief   This file includes a diskio driver skeleton to be completed by the user.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+ * @file    user_diskio.c
+ * @brief   This file includes a diskio driver skeleton to be completed by the user.
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under Ultimate Liberty license
+ * SLA0044, the "License"; You may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at:
+ *                             www.st.com/SLA0044
+ *
+ ******************************************************************************
+ */
 #include "../../Src/Device/SDCard/sd_card.h"
 #include "user_diskio.h"
 #include "main.h"
@@ -86,22 +86,19 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
-    Stat = STA_NOINIT;
+	Stat = STA_NOINIT;
 
-    /* 获取SD卡状�??? */
-  	int result;
-  	result = SD_Init();
+	/* 获取SD卡状�????? */
+	int result;
+	result = SD_Init();
 
-	if (result == 0)
-	{
+	if (result == 0) {
 		Stat = RES_OK;
-	}
-	else
-	{
+	} else {
 		Stat = RES_ERROR;
 	}
 
-    return Stat;
+	return Stat;
   /* USER CODE END INIT */
 }
 
@@ -115,11 +112,11 @@ DSTATUS USER_status (
 )
 {
   /* USER CODE BEGIN STATUS */
-    Stat = STA_NOINIT;
+	Stat = STA_NOINIT;
 
-    Stat = RES_OK;
+	Stat = RES_OK;
 
-    return Stat;
+	return Stat;
 
   /* USER CODE END STATUS */
 }
@@ -140,25 +137,19 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-	 DRESULT res = RES_OK;
+	DRESULT res = RES_OK;
 	int result;
-	if(count==1)
-	 {
-		 result=SD_ReadSingleBlock(sector,buff);
-	 }
-	 else
-	 {
-			 result = SD_ReadMultiBlock(sector, buff, count);
-	 }
-	 if (result == 0)
-	 {
-		 res = RES_OK;
-	 }
-	 else
-	 {
-		 res = RES_ERROR;
-	 }
-    return RES_OK;
+	if (count == 1) {
+		result = SD_ReadSingleBlock(sector, buff);
+	} else {
+		result = SD_ReadMultiBlock(sector, buff, count);
+	}
+	if (result == 0) {
+		res = RES_OK;
+	} else {
+		res = RES_ERROR;
+	}
+	return RES_OK;
   /* USER CODE END READ */
 }
 
@@ -179,26 +170,20 @@ DRESULT USER_write (
 )
 {
   /* USER CODE BEGIN WRITE */
-  /* USER CODE HERE */
+	/* USER CODE HERE */
 	DRESULT res = RES_OK;
 	int result;
-	if(count==1)
-	{
-		result=SD_WriteSingleBlock(sector, buff);
+	if (count == 1) {
+		result = SD_WriteSingleBlock(sector, buff);
+	} else {
+		result = SD_WriteMultiBlock(sector, buff, count);
 	}
-	else
-	{
-			result = SD_WriteMultiBlock(sector, buff, count);
-	}
-	if (result == 0)
-	{
+	if (result == 0) {
 		res = RES_OK;
-	}
-	else
-	{
+	} else {
 		res = RES_ERROR;
 	}
-    return RES_OK;
+	return RES_OK;
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */
@@ -218,33 +203,33 @@ DRESULT USER_ioctl (
 )
 {
   /* USER CODE BEGIN IOCTL */
-    DRESULT res = RES_ERROR;
+	DRESULT res = RES_ERROR;
 
-  //  FLASH_SPI_CSDISABLE();
+	//   FLASH_SPI_CSDISABLE();
 
-	uint8_t CSD[16] = {0};
-	uint8_t csddata[16] = {0};
+	uint8_t CSD[16] = { 0 };
+	uint8_t csddata[16] = { 0 };
 	uint32_t csize;
 	uint32_t Capacity;
-	switch (cmd)
-	{
+	switch (cmd) {
 	case CTRL_SYNC:
 		res = RES_OK;
 		break;
 	case GET_SECTOR_COUNT:
-				SD_GetCID(CSD);
-				SD_GetCSD(csddata);
-	//				SDGetCIDCSD(CSD, csddata);
-			  csize = csddata[9] + ((uint32_t)csddata[8] << 8) + ((uint32_t)(csddata[7] & 0x3f) << 16) + 1;
-			  Capacity = csize << 9;
-		*((DWORD *)buff) = Capacity;
+		SD_GetCID(CSD);
+		SD_GetCSD(csddata);
+
+		csize = csddata[9] + ((uint32_t) csddata[8] << 8)
+				+ ((uint32_t) (csddata[7] & 0x3f) << 16) + 1;
+		Capacity = csize << 9;
+		*((DWORD*) buff) = Capacity;
 		res = RES_OK;
 		break;
 	case GET_SECTOR_SIZE:
-		*(WORD *)buff = 512; //spi flash的扇区大小是 512 Bytes
+		*(WORD*) buff = 512; //spi flash的扇区大小是 512 Bytes
 		return RES_OK;
 	case GET_BLOCK_SIZE:
-		*((DWORD *)buff) = 4096;
+		*((DWORD*) buff) = 4096;
 		res = RES_OK;
 		break;
 	default:
@@ -252,7 +237,7 @@ DRESULT USER_ioctl (
 		break;
 	}
 
-    return res;
+	return res;
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */

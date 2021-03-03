@@ -58,14 +58,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define sca100_NSS_Pin GPIO_PIN_12
-#define sca100_NSS_GPIO_Port GPIOB
-#define sca100_SCK_Pin GPIO_PIN_13
-#define sca100_SCK_GPIO_Port GPIOB
-#define sca100_MISO_Pin GPIO_PIN_14
-#define sca100_MISO_GPIO_Port GPIOB
-#define sca100_MOSI_Pin GPIO_PIN_15
-#define sca100_MOSI_GPIO_Port GPIOB
 #define electric_relay_pin_Pin GPIO_PIN_8
 #define electric_relay_pin_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

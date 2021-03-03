@@ -58,7 +58,7 @@
 /* USER CODE END ExternalFunctions */
 
 /* USER CODE BEGIN 0 */
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart3;
 /* USER CODE END 0 */
 /**
   * Initializes the Global MSP.
@@ -92,7 +92,7 @@ void HAL_MspInit(void)
 #endif
 PUTCHAR_PROTOTYPE
 {
-HAL_UART_Transmit(&huart1 , (uint8_t *)&ch, 1, 0xFFFF);
+HAL_UART_Transmit(&huart3 , (uint8_t *)&ch, 1, 0xFFFF);
 return ch;
 }
 /* USER CODE END 1 */

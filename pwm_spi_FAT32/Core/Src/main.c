@@ -19,6 +19,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
+#include "dma.h"
 #include "fatfs.h"
 #include "spi.h"
 #include "tim.h"
@@ -29,6 +31,7 @@
 /* USER CODE BEGIN Includes */
 #include "../../Src/Device/Measure/measure.h"
 #include "../../Src/Device/Open_Tel_Mavlink/open_tel_mavlink.h"
+#include "../../Src/System/Mavlink_Usart_Fifo/mavlink_usart_fifo.h"
 
 /* USER CODE END Includes */
 
@@ -60,6 +63,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+extern fifo_t uart_rx_fifo, uart_tx_fifo;
+extern uint8_t uart_tx_buf[UART_TX_BUFFER_SIZE],
+		uart_rx_buf[UART_RX_BUFFER_SIZE];
 
 void measureStartHandler() {
 	Measure_Start();
@@ -78,8 +84,6 @@ void measureStopHandler() {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-//	FIL  test;
-//	char * ctest="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,6 +105,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
   MX_FATFS_Init();
@@ -109,56 +114,17 @@ int main(void)
   MX_TIM3_Init();
   MX_USART3_UART_Init();
   MX_TIM2_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+
+
 	//60°
 	// 200HZ
-//	printf("test\r\n");
-//  FS_Init();
-//  FS_Open(&test,"test1");
-//  FS_Write(&test,ctest,strlen(ctest));
-//  FS_Close(&test);
 	Measure_Device_Init();
 	Measure_Start();
 
-	mavlink_command_long_t com = { 0 };
-	mavlink_set_mode_t set_mode={0};
-	mavlink_command_long_t take_off_local={0};
-	mavlink_command_long_t take_off={0};
-	mavlink_command_long_t land={0};
-	mavlink_command_long_t ROI={0};
-	mavlink_set_position_target_local_ned_t set_position={0};
-	/*mavlink_control_system_state_t control={0};
-	control.airspeed=-1;
-	control.x_acc=1;
-	control.x_vel=2;
-	control.x_pos=3;
-	control.y_acc=1;
-	control.y_vel=2;
-	control.y_pos=3;
-	control.z_acc=1;
-	control.z_vel=2;
-	control.z_pos=3;*/
-
-	set_position.target_system=1;
-	set_position.target_component=0;
-	set_position.coordinate_frame=MAV_FRAME_LOCAL_NED;
-	set_position.type_mask=4039;
-	set_position.time_boot_ms=0;
-	set_position.afx=0;
-	set_position.vx=8;
-	set_position.x=0;
-	set_position.afy=0;
-	set_position.vy=8;
-	set_position.y=0;
-	set_position.afz=0;
-	set_position.vz=8;
-	set_position.z=0;
-
-	com.target_system    = 1;
-	com.target_component = 0;
-	com.command          = MAV_CMD_COMPONENT_ARM_DISARM;
-	com.confirmation     = true;
-	com.param1           = 1; // flag >0.5 => start, <0.5 => stop
+	fifo_init(&uart_tx_fifo, uart_tx_buf, UART_TX_BUFFER_SIZE);
+	fifo_init(&uart_rx_fifo, uart_rx_buf, UART_RX_BUFFER_SIZE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -168,10 +134,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		mavlink_msg_command_long_send_struct(MAVLINK_COMM_0,&com);
-		HAL_Delay(500);
+
 		Measure_Update();
+
+		mavlink_send_message(0, MSG_LOCATION, 0);
+		//mavlink_send_message(0, MSG_ATTITUDE, 0);
+
 		update();
+
 
 	}
   /* USER CODE END 3 */
@@ -185,6 +155,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -210,6 +181,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }

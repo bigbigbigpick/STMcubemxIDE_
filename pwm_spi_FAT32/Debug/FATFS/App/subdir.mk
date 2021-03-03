@@ -6,11 +6,11 @@
 C_SRCS += \
 ../FATFS/App/fatfs.c 
 
-OBJS += \
-./FATFS/App/fatfs.o 
-
 C_DEPS += \
 ./FATFS/App/fatfs.d 
+
+OBJS += \
+./FATFS/App/fatfs.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes

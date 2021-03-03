@@ -1,7 +1,0 @@
-spi_sca100T.c:21:6:An_Tran_Init	8	static
-spi_sca100T.c:31:6:An_Tran_WR_Byte	24	static
-spi_sca100T.c:60:10:An_Tran_Read_Byte	24	static
-spi_sca100T.c:101:7:AngularConvert	40	static
-spi_sca100T.c:129:10:AngularDataProcess	224	static
-spi_sca100T.c:155:6:selectSort	32	static
-spi_sca100T.c:171:6:delay_us	24	static
